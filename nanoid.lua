@@ -29,23 +29,23 @@ local function countl_zero(x)
 end
 
 local RANDOM_MAXBIT <const> = 63
-local RANDOM_MAX <const> = (1<<RANDOM_MAXBIT)-1
+local RANDOM_MAX <const> = (1 << RANDOM_MAXBIT) - 1
 
 local function random()
     return math.random(0, RANDOM_MAX)
 end
 
-local DefaultAlphabet <const> =  "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+local DefaultAlphabet <const> = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 local DefaultSize <const> = 21
 
-return function (config)
+return function(config)
     config = config or {
         alphabet = DefaultAlphabet,
         size = DefaultSize,
     }
     local alphabet = {}
     for c in config.alphabet:gmatch "." do
-        alphabet[#alphabet+1] = c
+        alphabet[#alphabet + 1] = c
     end
     local size = config.size
     local mask_bit = 32 - countl_zero(#alphabet - 1)
@@ -53,41 +53,41 @@ return function (config)
     local id = {}
     if #alphabet == mask + 1 then
         local step <const> = RANDOM_MAXBIT // mask_bit
-        local suxfix <const> = size//step*step
+        local suxfix <const> = size // step * step
         if suxfix == size then
-            return function ()
+            return function()
                 for cnt = 1, size - step + 1, step do
                     local rnd = random()
-                    for i = 0, step-1 do
+                    for i = 0, step - 1 do
                         local index = 1 + ((rnd >> (i * mask_bit)) & mask)
-                        id[cnt+i] = alphabet[index]
+                        id[cnt + i] = alphabet[index]
                     end
                 end
                 return table.concat(id)
             end
         else
-            return function ()
+            return function()
                 for cnt = 1, size - step + 1, step do
                     local rnd = random()
-                    for i = 0, step-1 do
+                    for i = 0, step - 1 do
                         local index = 1 + ((rnd >> (i * mask_bit)) & mask)
-                        id[cnt+i] = alphabet[index]
+                        id[cnt + i] = alphabet[index]
                     end
                 end
                 local rnd = random()
                 for cnt = suxfix, size do
-                    local index = 1 + ((rnd >> ((cnt-suxfix) * mask_bit)) & mask)
+                    local index = 1 + ((rnd >> ((cnt - suxfix) * mask_bit)) & mask)
                     id[cnt] = alphabet[index]
                 end
                 return table.concat(id)
             end
         end
     else
-        return function ()
+        return function()
             local cnt = 1
             while true do
                 local rnd = random()
-                for i = 0, RANDOM_MAXBIT-mask_bit, mask_bit do
+                for i = 0, RANDOM_MAXBIT - mask_bit, mask_bit do
                     local index = 1 + ((rnd >> i) & mask)
                     if index <= #alphabet then
                         id[cnt] = alphabet[index]

@@ -4,19 +4,19 @@ local create_nanoid = require "nanoid"
 
 local TESTS <const> = {
     default = {
-        alphabet =  "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        alphabet = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
         size = 21,
     },
     letters = {
-        alphabet =  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
         size = 24,
     },
     number = {
-        alphabet =  "0123456789",
+        alphabet = "0123456789",
         size = 36,
     },
     hex = {
-        alphabet =  "0123456789abcdef",
+        alphabet = "0123456789abcdef",
         size = 30,
     },
 }
