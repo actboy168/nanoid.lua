@@ -1,3 +1,13 @@
+local math_random = math.random
+local str_gmatch = string.gmatch
+local tbl_concat = table.concat
+
+local RandomMaxBit <const> = 63
+local RandomMax <const> = (1 << RandomMaxBit) - 1
+
+local DefaultAlphabet <const> = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+local DefaultSize <const> = 21
+
 local function countl_zero(x)
     local n = 32
     local y = x >> 16
@@ -28,15 +38,9 @@ local function countl_zero(x)
     return n - x
 end
 
-local RANDOM_MAXBIT <const> = 63
-local RANDOM_MAX <const> = (1 << RANDOM_MAXBIT) - 1
-
 local function random()
-    return math.random(0, RANDOM_MAX)
+    return math_random(0, RandomMax)
 end
-
-local DefaultAlphabet <const> = "_-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-local DefaultSize <const> = 21
 
 return function(config)
     config = config or {
@@ -44,7 +48,7 @@ return function(config)
         size = DefaultSize,
     }
     local alphabet = {}
-    for c in config.alphabet:gmatch "." do
+    for c in str_gmatch(config.alphabet, ".") do
         alphabet[#alphabet + 1] = c
     end
     local size = config.size
@@ -52,7 +56,7 @@ return function(config)
     local mask = (1 << mask_bit) - 1
     local id = {}
     if #alphabet == mask + 1 then
-        local step <const> = RANDOM_MAXBIT // mask_bit
+        local step <const> = RandomMaxBit // mask_bit
         local suxfix <const> = size // step * step
         if suxfix == size then
             return function()
@@ -63,7 +67,7 @@ return function(config)
                         id[cnt + i] = alphabet[index]
                     end
                 end
-                return table.concat(id)
+                return tbl_concat(id)
             end
         else
             return function()
@@ -79,7 +83,7 @@ return function(config)
                     local index = 1 + ((rnd >> ((cnt - suxfix) * mask_bit)) & mask)
                     id[cnt] = alphabet[index]
                 end
-                return table.concat(id)
+                return tbl_concat(id)
             end
         end
     else
@@ -87,13 +91,13 @@ return function(config)
             local cnt = 1
             while true do
                 local rnd = random()
-                for i = 0, RANDOM_MAXBIT - mask_bit, mask_bit do
+                for i = 0, RandomMaxBit - mask_bit, mask_bit do
                     local index = 1 + ((rnd >> i) & mask)
                     if index <= #alphabet then
                         id[cnt] = alphabet[index]
                         cnt = cnt + 1
                         if cnt > size then
-                            return table.concat(id)
+                            return tbl_concat(id)
                         end
                     end
                 end
