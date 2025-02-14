@@ -57,8 +57,8 @@ return function(config)
     local id = {}
     if #alphabet == mask + 1 then
         local step <const> = RandomMaxBit // mask_bit
-        local suxfix <const> = size // step * step
-        if suxfix == size then
+        local suffix <const> = size // step * step
+        if suffix == size then
             return function()
                 for cnt = 1, size - step + 1, step do
                     local rnd = random()
@@ -79,8 +79,8 @@ return function(config)
                     end
                 end
                 local rnd = random()
-                for cnt = suxfix, size do
-                    local index = 1 + ((rnd >> ((cnt - suxfix) * mask_bit)) & mask)
+                for cnt = suffix, size do
+                    local index = 1 + ((rnd >> ((cnt - suffix) * mask_bit)) & mask)
                     id[cnt] = alphabet[index]
                 end
                 return tbl_concat(id)
