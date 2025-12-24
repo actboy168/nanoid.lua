@@ -24,20 +24,20 @@ local TESTS <const> = {
 for name, cfg in pairs(TESTS) do
     local nanoid = create_nanoid(cfg)
 
-    local suit = lt.test(name)
+    local suite = lt.test(name)
 
-    function suit:base()
+    function suite:base()
         local alphabet = cfg.alphabet
         for _ = 1, 1000 do
             local id = nanoid()
             lt.assertEquals(#id, cfg.size)
             for c in id:gmatch "." do
-                lt.assertEquals(alphabet:match(c), c)
+                lt.assertNotEquals(alphabet:find(c, 1, true), nil)
             end
         end
     end
 
-    function suit:has_flat_distribution()
+    function suite:has_flat_distribution()
         local COUNT <const> = 100 * 1000
         local chars = {}
         for _ = 1, COUNT do
@@ -59,7 +59,7 @@ for name, cfg in pairs(TESTS) do
         lt.assertEquals(max - min <= 0.05, true)
     end
 
-    function suit:has_no_collisions()
+    function suite:has_no_collisions()
         local used = {}
         for _ = 1, 50 * 1000 do
             local id = nanoid()

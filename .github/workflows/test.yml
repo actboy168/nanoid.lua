@@ -9,5 +9,5 @@ jobs:
         submodules: true
     - uses: actboy168/setup-lua@master
       with:
-        luaVersion: '5.4'
+        luaVersion: '5.5'
     - run: lua test.lua
